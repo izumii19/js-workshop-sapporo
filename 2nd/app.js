@@ -105,46 +105,117 @@ checkVitality(101);
 // anything に代入された値が null の場合はコンソールに「anything is Null」と出力する
 // anything に代入された値が上記に当てはまらない場合は「anything is Error!」をコンソールに出力する
 
-/* 課題6
-下記の要件を満たすプログラムを実装してください。
+function checkAnything(anything) {
+  if (Object.prototype.toString.call(anything) === "[object String]") {
+    console.log("anything is String");
+  } else if (
+    Object.prototype.toString.call(anything) === "[object Number]" &&
+    !Number.isNaN(anything)
+  ) {
+    console.log("anything is Number");
+  } else if (Object.prototype.toString.call(anything) === "[object Array]") {
+    console.log("anything is Array");
+  } else if (Object.prototype.toString.call(anything) === "[object Null]") {
+    console.log("anything is Null");
+  } else {
+    console.log("anything is Error!");
+  }
+}
 
-変数 member を作成する
-member を代入された値が 森崎 の場合はコンソールに「博之」と出力する
-member を代入された値が 安田 の場合はコンソールに「顕」と出力する
-member を代入された値が 戸次 の場合はコンソールに「重幸」と出力する
-member を代入された値が 大泉 の場合はコンソールに「洋」と出力する
-member を代入された値が 音尾 の場合はコンソールに「琢真」と出力する
-member に代入された値が上記に当てはまらない場合は「NOT TEAM NACS!」をコンソールに出力する
-課題7
-次の配列を for文で回して、句読点区切りの文字列でコンソールに表示させてください。
-尚、配列の最後の場合は句読点を末尾に表示しません。
+checkAnything("りんご");
+checkAnything(10);
+checkAnything([1, 2, 3]);
+checkAnything(null);
+checkAnything(0 / 0);
 
-const TEAM_NACS = ['森崎', '安田', '戸次', '大泉', '音尾']
-課題8
-下記の要件を満たすプログラムを実装してください。
+// 課題6
+//下記の要件を満たすプログラムを実装してください。
+//変数 member を作成する
+// member を代入された値が 森崎 の場合はコンソールに「博之」と出力する
+// member を代入された値が 安田 の場合はコンソールに「顕」と出力する
+// member を代入された値が 戸次 の場合はコンソールに「重幸」と出力する
+// member を代入された値が 大泉 の場合はコンソールに「洋」と出力する
+// member を代入された値が 音尾 の場合はコンソールに「琢真」と出力する
+// member に代入された値が上記に当てはまらない場合は「NOT TEAM NACS!」をコンソールに出力する
 
-数値は1〜30までインクリメントしながら数値をコンソールに出力する
-3の倍数の場合は「アホになる！」をコンソールに出力する
-課題9
-コンソールで九九表を出力してください。
+function searchNACSMemberName(lastName) {
+  if (lastName === "森崎") {
+    console.log("博之");
+  } else if (lastName === "安田") {
+    console.log("顕");
+  } else if (lastName === "戸次") {
+    console.log("重幸");
+  } else if (lastName === "大泉") {
+    console.log("洋");
+  } else if (lastName === "音尾") {
+    console.log("琢真");
+  } else {
+    console.log("NOT TEAM NACS!");
+  }
+}
 
-1	2	3	4	5	6	7	8	9
-2	4	6	8	10	12	14	16	18
-3	6	9	12	15	18	21	24	27
-4	8	12	16	20	24	28	32	36
-5	10	15	20	25	30	35	40	45
-6	12	18	24	30	36	42	48	54
-7	14	21	28	35	42	49	56	63
-8	16	24	32	40	48	56	64	72
-9	18	27	36	45	54	63	72	81
-ヒント：配列の使用も認めます
+searchNACSMemberName("森崎");
+searchNACSMemberName("安田");
+searchNACSMemberName("戸次");
+searchNACSMemberName("大泉");
+searchNACSMemberName("音尾");
+searchNACSMemberName("木村");
 
-課題10
+// 課題7
+//次の配列を for文で回して、句読点区切りの文字列でコンソールに表示させてください。
+//尚、配列の最後の場合は句読点を末尾に表示しません。
+//const TEAM_NACS = ['森崎', '安田', '戸次', '大泉', '音尾']
+
+const TEAM_NACS = ["森崎", "安田", "戸次", "大泉", "音尾"];
+
+let stringBuff = "";
+for (var i = 0; i < TEAM_NACS.length; i++) {
+  stringBuff += TEAM_NACS[i];
+  if (i != TEAM_NACS.length - 1) {
+    stringBuff += "、";
+  }
+}
+console.log(stringBuff);
+
+// 課題8
+//下記の要件を満たすプログラムを実装してください。
+//数値は1〜30までインクリメントしながら数値をコンソールに出力する
+//3の倍数の場合は「アホになる！」をコンソールに出力する
+
+for (var i = 1; i <= 30; i++) {
+  if (i % 3 == 0) {
+    console.log(`${i}なので、アホになる！`);
+  } else {
+    console.log(i);
+  }
+}
+
+// 課題9
+// コンソールで九九表を出力してください。
+// 1	2	3	4	5	6	7	8	9
+// 2	4	6	8	10	12	14	16	18
+// 3	6	9	12	15	18	21	24	27
+// 4	8	12	16	20	24	28	32	36
+// 5	10	15	20	25	30	35	40	45
+// 6	12	18	24	30	36	42	48	54
+// 7	14	21	28	35	42	49	56	63
+// 8	16	24	32	40	48	56	64	72
+// 9	18	27	36	45	54	63	72	81
+// ヒント：配列の使用も認めます
+
+var array = [];
+for (var i = 1; i <= 9; i++) {
+  for (var j = 1; j <= 9; j++) {
+    array[j - 1] = i * j;
+  }
+  console.log(array.join(" "));
+}
+
+/* 課題10
 コンソールで「*」のピラミッドを出力してください。
-
 例
 
-  *
+         *
         ***
        *****
       *******
@@ -155,11 +226,19 @@ const TEAM_NACS = ['森崎', '安田', '戸次', '大泉', '音尾']
  *****************
 *******************
 
-
-
-
-//const num = [1, 2, 3];
-//const newNum = num.map(data => {
-//  return data * 10;
-//});
 */
+
+const ROWCOUNT = 10;
+const MAXCOUNT = ROWCOUNT + (ROWCOUNT - 1);
+
+for (var row = 1; row <= 10; row++) {
+  let asterCount = row + (row - 1);
+  let spaceCount = (MAXCOUNT - asterCount) / 2;
+
+  const asterArray = new Array(asterCount).fill("*");
+  const spaceArray = new Array(spaceCount).fill(" ");
+
+  console.log(
+    `${spaceArray.join("")}${asterArray.join("")}${spaceArray.join("")}`
+  );
+}
