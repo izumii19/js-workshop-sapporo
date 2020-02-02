@@ -105,7 +105,7 @@ console.log(total);
 // 消費税は配列 tax を使用し、各商品の合計値の小数点は切り捨ててください。
 // ヒント： 小数点切り捨ては Math.floor(number) で出来ます。
 
-const cart2 = [
+const foodCart = [
   { id: 1, name: "ビール", price: 198, count: 2, tax_id: 2 },
   { id: 2, name: "ストロングゼロ", price: 100, count: 1, tax_id: 2 },
   { id: 3, name: "豚肉", price: 212, count: 1, tax_id: 1 },
@@ -116,40 +116,60 @@ const cart2 = [
 const tax = [{ id: 1, value: 1.08 }, { id: 2, value: 1.1 }];
 
 //出力用の配列
-const aaa = [];
+const totalFee = [];
 
-cart2.forEach(function(food) {
+foodCart.forEach(function(food) {
   const findTax = tax.find(item => item.id === food.tax_id);
   const val = Math.floor(food.price * findTax.value) * food.count;
-  aaa.push(val);
+  totalFee.push(val);
 });
 
-console.log(...aaa);
+console.log(...totalFee);
 
-/*
-課題8
-消費税の計算は式は以下になります。
-https://www.keigenzeiritsu.info/article/18882
+// 課題8
+// 消費税の計算は式は以下になります。
+// https://www.keigenzeiritsu.info/article/18882
+// 本体価格＝税込み価格÷（1＋税率）
+// 以下の配列 cart から price は税込み価格になります。消費税8%と10%を組み合わせて税抜価格の合計値を求めてください。 ※小数点は四捨五入する
+//酒：10%
+//水道代：10%
+//食料品：8%
+//新聞定期購読：8%
+//ペットフード：10%
 
-以下の配列 cart から price は税込み価格になります。消費税8%と10%を組み合わせて税抜価格の合計値を求めてください。 ※小数点は四捨五入する
-
-酒：10%
-水道代：10%
-食料品：8%
-新聞定期購読：8%
-ペットフード：10%
-const cart = [
-  { id: 1, name: '酒', price: 126, tax: 10 },
-  { id: 2, name: '水道代', price: 5867, tax: 10 },
-  { id: 3, name: '食料品', price: 3533, tax: 8 },
-  { id: 4, name: '新聞定期購読', price: 4900, tax: 8 },
-  { id: 5, name: 'ペットフード', price: 3250, tax: 10 },
-  { id: 6, name: 'コーヒー', price: 225, tax: 8 }
+const cart3 = [
+  { id: 1, name: "酒", price: 126, tax: 10 },
+  { id: 2, name: "水道代", price: 5867, tax: 10 },
+  { id: 3, name: "食料品", price: 3533, tax: 8 },
+  { id: 4, name: "新聞定期購読", price: 4900, tax: 8 },
+  { id: 5, name: "ペットフード", price: 3250, tax: 10 },
+  { id: 6, name: "コーヒー", price: 225, tax: 8 }
 ];
-課題9
-countryLists の配列（国）から countryAreaLists の配列を条件（エリアごと）を参照して、各国が所属するエリアに格納された形で countryListGroups という変数オブジェクトを作成してください。（ Asia、Europe、Africa、MiddleEast、Oceania ）
 
-// 出力結果 console.log(countryListGroups)
+//税率をつかって税抜価格(temp)を算出する
+//tempを使って、税込み価格（reverse）を算出する
+//reverseが、税込み価格と同じかどうか判断する
+//同じじゃなかったら、税込み価格と同じになるように税抜き価格を調整する
+
+function withoutTax(price, tax) {
+  const coefficient = 1 + tax / 100;
+  let rtnVal = Math.round(price / coefficient);
+  const reverse = Math.round(rtnVal * coefficient);
+  if (price > reverse) {
+    rtnVal += 1;
+  } else if (price < reverse) {
+    rtnVal -= 1;
+  }
+  return rtnVal;
+}
+
+let totalVal = 0;
+cart3.forEach(fee => (totalVal += withoutTax(fee.price, fee.tax)));
+console.log(`合計 = ${totalVal}`);
+
+/* 課題9
+countryLists の配列（国）から countryAreaLists の配列を条件（エリアごと）を参照して、各国が所属するエリアに格納された形で countryListGroups という変数オブジェクトを作成してください。（ Asia、Europe、Africa、MiddleEast、Oceania ）
+出力結果 console.log(countryListGroups)
 {
   Asia: ['日本', '中国', 'インド'],
   Europe: ['ロシア', 'フランス', 'イギリス'],
@@ -157,14 +177,53 @@ countryLists の配列（国）から countryAreaLists の配列を条件（エ�
   MiddleEast: ['サウジアラビア'],
   Oceania: ['ニュージーランド']
 }
-const countryLists = ['日本', 'ロシア', 'アメリカ', 'フランス', 'ニュージーランド', 'エジプト', '中国', 'インド', 'サウジアラビア', 'カメルーン', 'イギリス'];
-const countryAreaLists = [
-  { area: 'アジア', countries: ['日本', '中国', 'インド'] },
-  { area: 'ヨーロッパ', countries: ['フランス', 'ロシア', 'イギリス'] },
-  { area: 'アフリカ', countries: ['カメルーン', 'エジプト'] },
-  { area: '中東', countries: ['サウジアラビア'] },
-  { area: 'オセアニア', countries: ['ニュージーランド'] }
+*/
+
+const countryLists = [
+  "日本",
+  "ロシア",
+  "アメリカ",
+  "フランス",
+  "ニュージーランド",
+  "エジプト",
+  "中国",
+  "インド",
+  "サウジアラビア",
+  "カメルーン",
+  "イギリス"
 ];
+const countryAreaLists = [
+  { area: "アジア", countries: ["日本", "中国", "インド"] },
+  { area: "ヨーロッパ", countries: ["フランス", "ロシア", "イギリス"] },
+  { area: "アフリカ", countries: ["カメルーン", "エジプト"] },
+  { area: "中東", countries: ["サウジアラビア"] },
+  { area: "オセアニア", countries: ["ニュージーランド"] }
+];
+
+//追加先のオブジェクトを定義
+
+const countryListGroups = {
+  Asia: [],
+  Europe: [],
+  America: [],
+  Africa: [],
+  MiddleEast: [],
+  Oceania: []
+};
+
+//countryLists を forEach で回す
+countryLists.forEach(function(country) {
+  const countryArea = countryAreaLists.filter(
+    item => item.countries.indexOf(country) >= 0
+  );
+  console.log(country);
+  console.log(countryArea);
+});
+
+//フィルタリングした結果は filtered へ代入
+//filtered の値を元に switch 構文で条件マッチしたエリアに countryListGroups.XXXX へ push します。
+
+/*
 課題10
 [1, 2, 3, 4, 5, 6, 7] の配列の要素を逆順の配列を出力してください。
 
