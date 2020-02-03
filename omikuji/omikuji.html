@@ -2,20 +2,26 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <title>おみくじ</title>
   </head>
 
   <body>
-    <h1>おみくじ（JavaScriptの練習）</h1>
-    <input
-      id="omikuji"
-      type="image"
-      src="./Resources/omikuji.png"
-      alt="おみくじをひく"
-      width="250px"
-      height="332px"
-      onclick="OnButtonClick();"
-    />
+    <center>
+      <h1>おみくじ（JavaScriptの練習）</h1>
+      <input
+        id="omikuji"
+        type="image"
+        src="./Resources/omikuji.png"
+        alt="おみくじをひく"
+        width="250px"
+        height="332px"
+        onclick="OnButtonClick();"
+      />
+      <br />
+      <br />
+      <label id="kekka">結果はここにでるよ</label>
+    </center>
   </body>
   <script src="app.js"></script>
 </html>
