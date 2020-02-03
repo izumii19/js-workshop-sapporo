@@ -201,11 +201,9 @@ const countryAreaLists = [
 ];
 
 //追加先のオブジェクトを定義
-
 const countryListGroups = {
   Asia: [],
   Europe: [],
-  America: [],
   Africa: [],
   MiddleEast: [],
   Oceania: []
@@ -216,28 +214,64 @@ countryLists.forEach(function(country) {
   const countryArea = countryAreaLists.filter(
     item => item.countries.indexOf(country) >= 0
   );
-  console.log(country);
-  console.log(countryArea);
+
+  if (countryArea.length > 0) {
+    switch (countryArea[0].area) {
+      case "アジア":
+        countryListGroups.Asia.push(country);
+        break;
+
+      case "ヨーロッパ":
+        countryListGroups.Europe.push(country);
+        break;
+
+      case "アフリカ":
+        countryListGroups.Africa.push(country);
+        break;
+
+      case "中東":
+        countryListGroups.MiddleEast.push(country);
+        break;
+
+      case "オセアニア":
+        countryListGroups.Oceania.push(country);
+        break;
+
+      default:
+        break;
+    }
+  }
 });
 
-//フィルタリングした結果は filtered へ代入
-//filtered の値を元に switch 構文で条件マッチしたエリアに countryListGroups.XXXX へ push します。
+console.log(countryListGroups);
 
-/*
-課題10
-[1, 2, 3, 4, 5, 6, 7] の配列の要素を逆順の配列を出力してください。
-
+// 課題10
+// [1, 2, 3, 4, 5, 6, 7] の配列の要素を逆順の配列を出力してください。
 // 出力結果
-[7, 6, 5, 4, 3, 2, 1]
-課題11
-[[1, 2, 3], [4, 5], [6, 7]] のネストされた配列をネストされていない配列の形にして出力してください。
+// [7, 6, 5, 4, 3, 2, 1]
 
+const ary1 = [1, 2, 3, 4, 5, 6, 7];
+
+var ary2 = ary1.slice();
+ary2.reverse();
+
+console.log(ary1);
+console.log(ary2);
+
+// 課題11
+// [[1, 2, 3], [4, 5], [6, 7]] のネストされた配列をネストされていない配列の形にして出力してください。
 // 出力結果
-[1, 2, 3, 4, 5, 6, 7]
-課題12
-[[1, 2, 3], [4, 5], [6, 7]] のネストされた配列から以下の配列を出力してください。
+// [1, 2, 3, 4, 5, 6, 7]
 
+const beforeAry = [[1, 2, 3], [4, 5], [6, 7]];
+const afterAry = beforeAry.flat();
+console.log(afterAry);
+
+//課題12
+//[[1, 2, 3], [4, 5], [6, 7]] のネストされた配列から以下の配列を出力してください。
 // 出力結果
-[7, 6, 5, 4, 3, 2, 1]
+//[7, 6, 5, 4, 3, 2, 1]
 
-*/
+const afterAry12 = beforeAry.flat();
+afterAry12.reverse();
+console.log(afterAry12);
