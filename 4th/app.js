@@ -75,14 +75,42 @@ var multhple3 = multhple(3);
 var ans = multhple3(3);
 console.log(`3×3=${ans}`);
 
+/* 課題5
+ * 再帰関数を用いて1から n までの自然数の和を返す関数を作ってください。出力結果は console.log を使用してください。
+ * ※例えば n が 10 の場合、出力結果は 55 となります
+ */
+
+let addValue = function add(maxVal) {
+  let sumVal = 0;
+  sumVal = maxVal;
+  maxVal--;
+  if (maxVal >= 0) {
+    return sumVal + add(maxVal);
+  } else {
+    return 0;
+  }
+};
+
+console.log(addValue(10));
+
 /*
-課題5
-再帰関数を用いて1から n までの自然数の和を返す関数を作ってください。出力結果は console.log を使用してください。
-※例えば n が 10 の場合、出力結果は 55 となります
+ * 課題6
+ * 引数で受け取った配列の値を2倍にして返す高階関数を作成してください。 出力結果は console.log を使用してください。 高階関数の返り値は下記のような結果を期待します。
+ */
 
-課題6
-引数で受け取った配列の値を2倍にして返す高階関数を作成してください。 出力結果は console.log を使用してください。 高階関数の返り値は下記のような結果を期待します。
+// 高階関数
+function mockForEach(array, tooTimes) {
+  const result = [];
+  for (let key in array) {
+    result.push(tooTimes(array[key]));
+  }
+  console.log(result);
+}
 
-const num = [1, 2, 3, 4, 5];      // この配列を引数に渡すと
-const result = [2, 4, 6, 8, 10];  // それぞれの数値が2倍になった配列が返ってくる
-*/
+// 値を2倍
+function tooTimes(value) {
+  return value * 2;
+}
+
+const num = [1, 2, 3, 4, 5];
+mockForEach(num, tooTimes);
