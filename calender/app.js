@@ -62,6 +62,16 @@ function displayDays() {
           isContinue = false;
         }
       }
+
+      /*
+      //TODO 祝日を表示させたい
+      var holidays = holiday_jp.between(
+        new Date("2010-09-14"),
+        new Date("2010-09-21")
+      );
+      console.log(holidays[0]["name"]); // 敬老の日
+      */
+
       //今日の場所（row,col）取得
       const nowCol = week.indexOf(today.getDate());
       if (nowCol >= 0) {
