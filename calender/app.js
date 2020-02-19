@@ -15,7 +15,7 @@ document.querySelector("#yearMonth").innerHTML = `${today.getFullYear()}/${(
 // tableタグ開始
 calendarHtml += '<table border="1" id="calendarTable">';
 
-// 曜日作成
+// ヘッダ(曜日)作成
 calendarHtml += "<tr>";
 oneWeek.forEach(youbi => (calendarHtml += `<th>${youbi}</th>`));
 calendarHtml += "</tr>";
@@ -24,13 +24,78 @@ calendarHtml += "</tr>";
 const dayOfWeek = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
 // 1日〜その週末までの日の配列を作成
 const firstDays = [...Array(7 - dayOfWeek).keys()].map(ary => ++ary);
-// 当月の日数を取得
+// 月の日数を取得
 const lastDay = new Date(
   today.getFullYear(),
   today.getMonth() + 1,
   0
 ).getDate();
 
+//日付を描画
+function displayDays2() {
+  //カレンダー表示用配列作成
+  let dayArrays = [];
+
+  // 当月作成
+  for (var i = 0; i < lastDay; i++) {
+    dayArrays[i] = {
+      year: today.getFullYear(),
+      month: today.getMonth() + 1,
+      day: i + 1,
+      dayOfWeek: new Date(today.getFullYear(), today.getMonth(), i + 1).getDay()
+    };
+  }
+
+  // 前月作成
+  let tempMonth = [];
+
+  // 日数を取得
+  let lastmonthDays = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    0
+  ).getDate();
+
+  for (var i = 0; i < dayArrays[0].dayOfWeek; i++) {
+    tempMonth[i] = {
+      year: today.getFullYear(),
+      month: today.getMonth(),
+      day: lastmonthDays - dayArrays[0].dayOfWeek + i,
+      dayOfWeek: i
+    };
+  }
+  dayArrays.unshift(...tempMonth);
+
+  //翌月作成
+  tempMonth = [];
+
+  var cnt = 6 - dayArrays[dayArrays.length - 1].dayOfWeek;
+
+  for (var i = 0; i < cnt; i++) {
+    tempMonth[i] = {
+      year: today.getFullYear(),
+      month: today.getMonth() + 2,
+      day: i + 1,
+      dayOfWeek: dayArrays[dayArrays.length - 1].dayOfWeek + i + 1
+    };
+  }
+  dayArrays.push(...tempMonth);
+
+  //HTML作成
+  calendarHtml += "<tr>";
+  dayArrays.forEach(function(aDay) {
+    if (aDay.dayOfWeek === 0) {
+      calendarHtml += "<tr>";
+    }
+    calendarHtml += `<td>${aDay.day}</td>`;
+    if (aDay.dayOfWeek === 6) {
+      calendarHtml += "</tr>";
+    }
+  });
+}
+const todayRowCol = displayDays2();
+
+/*
 //日付を描画
 function displayDays() {
   var isFirstTime = true;
@@ -63,15 +128,6 @@ function displayDays() {
         }
       }
 
-      /*
-      //TODO 祝日を表示させたい
-      var holidays = holiday_jp.between(
-        new Date("2010-09-14"),
-        new Date("2010-09-21")
-      );
-      console.log(holidays[0]["name"]); // 敬老の日
-      */
-
       //今日の場所（row,col）取得
       const nowCol = week.indexOf(today.getDate());
       if (nowCol >= 0) {
@@ -92,12 +148,14 @@ function displayDays() {
   return f();
 }
 const todayRowCol = displayDays();
+*/
 
 // tableタグ終了
 calendarHtml += "</table>";
 // HTMLに反映
 document.querySelector("#calendar").innerHTML = calendarHtml;
 
+/*
 // セルの色付け
 var table = document.getElementById("calendarTable");
 for (var i = 0; i < table.rows.length; i++) {
@@ -112,3 +170,13 @@ for (var i = 0; i < table.rows.length; i++) {
     }
   }
 }
+*/
+
+/*
+      //TODO 祝日を表示させたい
+      var holidays = holiday_jp.between(
+        new Date("2010-09-14"),
+        new Date("2010-09-21")
+      );
+      console.log(holidays[0]["name"]); // 敬老の日
+      */
