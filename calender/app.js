@@ -1,5 +1,22 @@
 "use strict";
 
+function createDateData(year, month, day, dayOfWeek) {
+  return {
+    year: year,
+    month: month,
+    day: day,
+    dayOfWeek: dayOfWeek,
+    color:
+      today.getMonth() + 1 !== month
+        ? "gray"
+        : today.getMonth() + 1 === month && dayOfWeek === 0
+        ? "red"
+        : today.getMonth() + 1 === month && dayOfWeek === 6
+        ? "blue"
+        : ""
+  };
+}
+
 var calendarHtml = "";
 const oneWeek = ["日", "月", "火", "水", "木", "金", "土"];
 
@@ -32,145 +49,88 @@ const lastDay = new Date(
 ).getDate();
 
 //日付を描画
-function displayDays2() {
-  //カレンダー表示用配列作成
-  let dayArrays = [];
+//カレンダー表示用配列作成
+let dayArrays = [];
 
-  // 当月作成
-  for (var i = 0; i < lastDay; i++) {
-    dayArrays[i] = {
-      year: today.getFullYear(),
-      month: today.getMonth() + 1,
-      day: i + 1,
-      dayOfWeek: new Date(today.getFullYear(), today.getMonth(), i + 1).getDay()
-    };
-  }
+// 当月作成
+for (var i = 0; i < lastDay; i++) {
+  dayArrays[i] = createDateData(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    i + 1,
+    new Date(today.getFullYear(), today.getMonth(), i + 1).getDay()
+  );
+}
 
-  // 前月作成
-  let tempMonth = [];
+// 前月作成
+let tempMonth = [];
 
-  // 日数を取得
-  let lastmonthDays = new Date(
+// 日数を取得
+let lastmonthDays = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  0
+).getDate();
+
+for (var i = 0; i < dayArrays[0].dayOfWeek; i++) {
+  tempMonth[i] = createDateData(
     today.getFullYear(),
     today.getMonth(),
-    0
-  ).getDate();
-
-  for (var i = 0; i < dayArrays[0].dayOfWeek; i++) {
-    tempMonth[i] = {
-      year: today.getFullYear(),
-      month: today.getMonth(),
-      day: lastmonthDays - dayArrays[0].dayOfWeek + i,
-      dayOfWeek: i
-    };
-  }
-  dayArrays.unshift(...tempMonth);
-
-  //翌月作成
-  tempMonth = [];
-
-  var cnt = 6 - dayArrays[dayArrays.length - 1].dayOfWeek;
-
-  for (var i = 0; i < cnt; i++) {
-    tempMonth[i] = {
-      year: today.getFullYear(),
-      month: today.getMonth() + 2,
-      day: i + 1,
-      dayOfWeek: dayArrays[dayArrays.length - 1].dayOfWeek + i + 1
-    };
-  }
-  dayArrays.push(...tempMonth);
-
-  //HTML作成
-  calendarHtml += "<tr>";
-  dayArrays.forEach(function(aDay) {
-    if (aDay.dayOfWeek === 0) {
-      calendarHtml += "<tr>";
-    }
-    calendarHtml += `<td>${aDay.day}</td>`;
-    if (aDay.dayOfWeek === 6) {
-      calendarHtml += "</tr>";
-    }
-  });
+    lastmonthDays - dayArrays[0].dayOfWeek + i,
+    i
+  );
 }
-const todayRowCol = displayDays2();
+dayArrays.unshift(...tempMonth);
 
-/*
-//日付を描画
-function displayDays() {
-  var isFirstTime = true;
-  var isContinue = true;
-  var nextDay = 0;
+//翌月作成
+tempMonth = [];
 
-  var nowRow = 1;
-  var todayRowCol = [];
+var cnt = 6 - dayArrays[dayArrays.length - 1].dayOfWeek;
 
-  function f() {
-    while (isContinue) {
-      // 1週間分の配列を作成
-      var week = Array(7).fill("-");
-
-      if (isFirstTime) {
-        //配列を途中から上書き
-        week.splice(dayOfWeek, 7 - dayOfWeek, ...firstDays);
-        isFirstTime = false;
-      } else {
-        //1週間分の日付作成
-        week = [...Array(7).keys()].map(ary => ary + nextDay);
-
-        //最終週の場合
-        if (week[week.length - 1] >= lastDay) {
-          //今月以降の日付をクリアする
-          var index = week.findIndex(day => day === lastDay) + 1;
-          week.splice(index, 7 - index, ...[...Array(7 - index).fill("-")]);
-          //ループを抜けるフラグ
-          isContinue = false;
-        }
-      }
-
-      //今日の場所（row,col）取得
-      const nowCol = week.indexOf(today.getDate());
-      if (nowCol >= 0) {
-        todayRowCol = [nowRow, nowCol];
-      }
-
-      //次週の始まりを退避
-      nextDay = week[week.length - 1] + 1;
-      nowRow++;
-
-      //HTML作成
-      calendarHtml += "<tr>";
-      week.forEach(day => (calendarHtml += `<td>${day}</td>`));
-      calendarHtml += "</tr>";
-    }
-    return todayRowCol;
-  }
-  return f();
+for (var i = 0; i < cnt; i++) {
+  tempMonth[i] = createDateData(
+    today.getFullYear(),
+    today.getMonth() + 2,
+    i + 1,
+    dayArrays[dayArrays.length - 1].dayOfWeek + i + 1
+  );
 }
-const todayRowCol = displayDays();
-*/
+dayArrays.push(...tempMonth);
+
+//HTML作成
+var calendarHtml2 = "";
+dayArrays.forEach(function(aDay) {
+  if (aDay.dayOfWeek === 0 || calendarHtml2 === "") {
+    calendarHtml2 += "<tr>";
+  }
+  calendarHtml2 += `<td`;
+
+  if (aDay.color != "") {
+    calendarHtml2 += ` style = "color:${aDay.color}" `;
+  }
+
+  if (aDay.month !== today.getMonth() + 1) {
+    calendarHtml2 += ` bgcolor = "lightgray" `;
+  } else if (
+    today.getFullYear() === aDay.year &&
+    today.getMonth() + 1 === aDay.month &&
+    today.getDate() === aDay.day
+  ) {
+    calendarHtml2 += ` bgcolor = "pink" `;
+  }
+  calendarHtml2 += `>${aDay.day}</td>`;
+
+  if (aDay.dayOfWeek === 6) {
+    calendarHtml2 += "</tr>";
+  }
+});
+
+calendarHtml += calendarHtml2;
 
 // tableタグ終了
 calendarHtml += "</table>";
 // HTMLに反映
 document.querySelector("#calendar").innerHTML = calendarHtml;
-
-/*
-// セルの色付け
-var table = document.getElementById("calendarTable");
-for (var i = 0; i < table.rows.length; i++) {
-  // 土日
-  table.rows[i].cells[0].style.color = "Red";
-  table.rows[i].cells[6].style.color = "Blue";
-
-  for (var j = 0; j < table.rows[i].cells.length; j++) {
-    // 今日
-    if (i === todayRowCol[0] && j === todayRowCol[1]) {
-      table.rows[i].cells[j].style.backgroundColor = "pink";
-    }
-  }
-}
-*/
 
 /*
       //TODO 祝日を表示させたい
