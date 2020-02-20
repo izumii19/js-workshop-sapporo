@@ -2,7 +2,7 @@
 
 const oneWeek = ["日", "月", "火", "水", "木", "金", "土"];
 
-let datebuff = new Date("2020-2-25");
+let datebuff = new Date();
 const today = {
   year: datebuff.getFullYear(),
   month: datebuff.getMonth() + 1,
