@@ -41,7 +41,7 @@ for (let i = 0; i < daysOfMonth; i++) {
     today.year,
     today.month,
     i + 1,
-    new Date(`${today.year}/${today.month}/${i + 1}`).getDay()
+    new Date(today.year, today.month - 1, i + 1).getDay()
   );
 }
 
@@ -64,9 +64,9 @@ dayArrays.unshift(...tempMonth);
 //翌月作成
 tempMonth = [];
 
-var cnt = 6 - dayArrays[dayArrays.length - 1].dayOfWeek;
+let cnt = 6 - dayArrays[dayArrays.length - 1].dayOfWeek;
 
-for (var i = 0; i < cnt; i++) {
+for (let i = 0; i < cnt; i++) {
   tempMonth[i] = createDayData(
     today.year,
     today.month + 1,
@@ -76,8 +76,29 @@ for (var i = 0; i < cnt; i++) {
 }
 dayArrays.push(...tempMonth);
 
+// 祝日取得
+let holidays = holiday_jp.between(
+  new Date(today.year, today.month - 1, 1),
+  new Date(today.year, today.month - 1, daysOfMonth)
+);
+console.log(holidays);
+
+let tempday = holidays.map(holiday => {
+  return dayArrays.find(day => {
+    if (
+      day.year === holiday.date.getFullYear() &&
+      day.month === holiday.date.getMonth() + 1 &&
+      day.day === holiday.date.getDate()
+    ) {
+      day.holidayName = holiday.name;
+      return day;
+    }
+  });
+});
+console.log(tempday);
+
 //HTML作成
-var calendarHtml2 = "";
+let calendarHtml2 = "";
 dayArrays.forEach(function(aDay) {
   if (aDay.dayOfWeek === 0 || calendarHtml2 === "") {
     calendarHtml2 += "<tr>";
@@ -93,11 +114,17 @@ dayArrays.forEach(function(aDay) {
   } else if (
     today.year === aDay.year &&
     today.month === aDay.month &&
-    today.date === aDay.date
+    today.date === aDay.day
+  ) {
+    calendarHtml2 += ` bgcolor = "lightgreen" `;
+  } else if (
+    aDay.holidayName != "" &&
+    aDay.dayOfWeek !== 0 &&
+    aDay.dayOfWeek !== 6
   ) {
     calendarHtml2 += ` bgcolor = "pink" `;
   }
-  calendarHtml2 += `>${aDay.date}</td>`;
+  calendarHtml2 += `>${aDay.day}</td>`;
 
   if (aDay.dayOfWeek === 6) {
     calendarHtml2 += "</tr>";
@@ -112,20 +139,18 @@ calendarHtml += "</table>";
 document.querySelector("#calendar").innerHTML = calendarHtml;
 
 /*
-      //TODO 祝日を表示させたい
-      var holidays = holiday_jp.between(
-        new Date("2010-09-14"),
-        new Date("2010-09-21")
-      );
-      console.log(holidays[0]["name"]); // 敬老の日
-      */
-
+ * 日付データ作成
+ */
 function createDayData(year, month, day, dayOfWeek) {
   return {
+    date: new Date(
+      `${year}-${("0" + month).slice(-2)}-${("0" + day).slice(-2)}`
+    ),
     year: year,
     month: month,
-    date: day,
+    day: day,
     dayOfWeek: dayOfWeek,
+    holidayName: "",
     color:
       today.month !== month
         ? "gray"
